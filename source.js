@@ -1,3 +1,4 @@
+"use strict";
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -24,6 +25,8 @@ return function(minutes,days) {
 			function(o) {
 				return o.startTime
 			});
+		let Data2;
+		let self=this;
 		/***************Utility - Random Gen***************/
 
 
@@ -39,8 +42,6 @@ return function(minutes,days) {
 
 			return returnArr;
 		}
-
-
 
 		function processInfoArr(num /* number of objects*/ , start /* Moment - start of run */ , diff /* For start.add() */ ) {
 			var returnArr = [];
@@ -116,26 +117,31 @@ return function(minutes,days) {
 		}
 
 		/***************Utility - Random Gen ENDS***************/
-		return {
-			dataSize:function(){
-				return Data.length;
-			},
-			get:function(obj){
+
+			this.dataSize=function(){
+				return this.data().length;
+			};
+			this.get=function(obj,fn){
+
 				if(!checkRng(obj)) throw Error("Bad INPUT in dataGen");
 
 				let asked=breakRng(obj);
+				let value=_.difference(asked[0],asked[1]).map(i=>{
+							return self.data()[i];
+							});
+
+				if(fn) value=value.map(fn);
+				
 				return new Promise((resolve,reject)=>{
 					setTimeout(()=>{
 						resolve({
 							asked:obj,
-							value:_.difference(asked[0],asked[1]).map(i=>{
-							return Data[i];
-							})
+							value:value
 						})
 					},1000);
 				});
-			},
-			getAccessors:function(){
+			};
+			this.getAccessors=function(){
 				return {
 					getID: function(d){
 						return d.id;
@@ -151,9 +157,38 @@ return function(minutes,days) {
 					}
 				}
 			}
+
+        this.search=function(){
+           if(arguments.length){
+              let search=arguments[0];
+              if(_.isEmpty(search)){
+              	this.__search__=null;
+              	Data2=[];
+              	return this;
+              }
+              this.__search__=search; 
+              Data2=_.filter(Data,this.searchAccessor()(search));
+              return this;
+            }else return this.__search__;
+        }
+
+        this.searchAccessor=function(){
+           if(arguments.length){
+              let searchAccessor=arguments[0];
+              this.__searchAccessor__=searchAccessor; 
+              return this;
+            }else return this.__searchAccessor__;
+        }
+
+        this.data=function(){
+        	if(this.search())
+        		return Data2
+        	else return Data;
+        }
+
+			return this;
 		}
 	};
-}
 	
 function checkRng(rng){
     return _.isObject(rng) && (_.isEmpty(rng) || (_.isEmpty(_.difference(_.keys(rng), ["start", "end", "except"])) 
