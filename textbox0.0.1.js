@@ -21,7 +21,8 @@ function realAction(_,d3){
        
                 let textbox=null;
         
-                let {width,height,margin}=dimensions;
+	//let {width,height,margin}=dimensions;
+		let width=dimensions.width,height=dimensions.height,margin=dimensions.margin;
         
                 if (ph.select("pre#textbox").size() > 0){
                     textbox = ph.select("pre#textbox");
