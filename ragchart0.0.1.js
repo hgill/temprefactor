@@ -23,8 +23,9 @@ function realAction(_,d3,moment){
 
 	let ragchart = null,xAxis1,xAxis2;
 
-	let {width,height,margin}=dimensions,translate=height/2;
-
+	//let {width,height,margin}=dimensions,translate=height/2;
+	//let {width,height,margin}=dimensions,translate=height/2;
+		let width=dimensions.width,height=dimensions.height,margin=dimensions.margin,translate=height/2;
 	if (ph.select("svg#ragchart").size() > 0){
 		ragchart = ph.select("svg#ragchart");
 		xAxis1=ragchart.select('g.xAxis');	
