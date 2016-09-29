@@ -22,7 +22,8 @@ function realAction(d3){
 		};
 
 			let ph = d3.select(placeholder);
-	let {width,height,margin}=dimensions;
+	//let {width,height,margin}=dimensions;
+		let width=dimensions.width,height=dimensions.height,margin=dimensions.margin;
 
 			let wirechart = null,xAxis1=null;
 
